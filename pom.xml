@@ -4,6 +4,10 @@
   <groupId>org.nesser</groupId>
   <artifactId>projetonetflix</artifactId>
   <packaging>war</packaging>
+  <properties>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+  </properties>
   <version>1.0-SNAPSHOT</version>
   <name>projetonetflix Maven Webapp</name>
   <url>http://maven.apache.org</url>
@@ -18,6 +22,17 @@
       <groupId>com.google.code.gson</groupId>
       <artifactId>gson</artifactId>
       <version>2.8.9</version>
+    </dependency>
+    <dependency>
+      <groupId>com.thetransactioncompany</groupId>
+      <artifactId>cors-filter</artifactId>
+      <version>2.10</version>
+    </dependency>
+    <dependency>
+      <groupId>javax</groupId>
+      <artifactId>javaee-web-api</artifactId>
+      <version>7.0</version>
+      <scope>provided</scope>
     </dependency>
   </dependencies>
   <build>
