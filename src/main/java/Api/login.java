@@ -38,6 +38,7 @@ public class login extends HttpServlet {
             getServletContext().setAttribute(request.getSession().getId(), request.getSession());
             //preparando a resposa que levará o id da seção para o react do outro lado
             user.setSessionID(request.getSession().getId());
+            user.setIdade(user.getIdade());
 
             String json = gson.toJson(user);
 

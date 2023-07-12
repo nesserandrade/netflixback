@@ -1,16 +1,38 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package Api;
 
 import com.google.gson.Gson;
-import models.Erro;
-import models.Usuario;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.lang.reflect.Type;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
 
+import com.google.gson.reflect.TypeToken;
+import models.Erro;
+import models.FiltroIdade;
+import models.RequisicaoAPI;
+import models.Usuario;
+
+/**
+ *
+ * @author gutol
+ */
 public class api extends HttpServlet {
 
 
@@ -26,34 +48,93 @@ public class api extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        Gson gson = new Gson();
-        Usuario usuario = gson.fromJson(request.getReader(), Usuario.class);
+        StringBuilder stringBuilder = new StringBuilder();
+        BufferedReader bufferedReader = request.getReader();
+        String line;
+        while ((line = bufferedReader.readLine()) != null) {
+            stringBuilder.append(line);
+        }
+        bufferedReader.close();
 
-        System.out.println("Teste: ");
-        System.out.println(request.getReader());
-        System.out.println(usuario.getSessionID());
+        String requestBody = stringBuilder.toString();
+
+        Gson gson = new Gson();
+        RequisicaoAPI requisicao = gson.fromJson(requestBody, RequisicaoAPI.class);
 
         //HttpSession session = request.getSession();  //não encontra
-        HttpSession session = (HttpSession) getServletContext().getAttribute(usuario.getSessionID());
+        HttpSession session = (HttpSession) getServletContext().getAttribute(requisicao.getSessionID());
+        session.setAttribute("path", requisicao);
+        if (session != null && session.getAttribute("path") != null) {
+            RequisicaoAPI requisicaoSessao = (RequisicaoAPI) session.getAttribute("path");
 
-        if(session != null && session.getAttribute("usuario") != null){
-            usuario =  (Usuario) session.getAttribute("usuario");
-            String json = gson.toJson(usuario);
+            String API_DNS = "https://api.themoviedb.org/3";
+            String caminho = requisicaoSessao.getPath();
 
-            response.getWriter().println(json);
+            URL url = new URL(API_DNS + caminho);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
 
-        } else {
-            Erro erro = new Erro();
-            erro.setDescricao("Login Não Realizado!");
-            erro.setCodigo("001");
+            int responseCode = connection.getResponseCode();
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                StringBuilder responseAPI = new StringBuilder();
+                String inputLine;
 
-            String json = gson.toJson(erro);
-            response.getWriter().println(json);
+                while ((inputLine = in.readLine()) != null) {
+                    responseAPI.append(inputLine);
+                }
+                in.close();
+
+                String apiResponse = responseAPI.toString();
+
+                String originalResponse = String.valueOf(apiResponse);
+
+                int idade = Integer.valueOf(requisicaoSessao.getIdade());
+                System.out.println(idade);
+                if(idade < 18) {
+
+                    Type type = new TypeToken<Map<String, Object>>(){}.getType();
+                    Map<String, Object> jsonMap = gson.fromJson(apiResponse, type);
+
+                    List<Map<String, Object>> results = (List<Map<String, Object>>) jsonMap.get("results");
+
+                    List<FiltroIdade> filtros = results.stream()
+                            .map(result -> gson.fromJson(gson.toJson(result), FiltroIdade.class))
+                            .collect(Collectors.toList());
+
+                    List<FiltroIdade> filteredShows = filtros.stream()
+                            .filter(filtro -> !Boolean.valueOf(filtro.getAdult()))
+                            .collect(Collectors.toList());
+
+                    jsonMap.put("results", filteredShows);
+
+                    String filteredJson = gson.toJson(jsonMap);
+
+                    response.getWriter().println(filteredJson);
+
+                }
+                else {
+                    if (originalResponse != null && !originalResponse.isEmpty()) {
+                        // Enviar o JSON para o front-end ou fazer qualquer outra operação necessária
+                        System.out.println(originalResponse);
+                    } else {
+                        System.out.println("O mapa original está vazio. Verifique os dados de entrada.");
+                    }
+                    response.getWriter().println(originalResponse);
+                }
+
+            } else {
+                Erro erro = new Erro();
+                erro.setDescricao("Falha na API!");
+                erro.setCodigo("001");
+
+                String json = gson.toJson(erro);
+                response.getWriter().println(json);
+
+            }
 
         }
 
+
     }
-
-
-
 }

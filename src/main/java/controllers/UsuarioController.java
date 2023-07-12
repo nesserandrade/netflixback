@@ -22,7 +22,7 @@ public class UsuarioController {
 
 
         Usuario u2 = new Usuario();
-        u2.setNome("João da Silva Sauro");
+        u2.setNome("Joao da Silva Sauro");
         u2.setEmail("joao@teste.com");
         u2.setSenha("1234");
         u2.setIdade("05");
@@ -43,6 +43,7 @@ public class UsuarioController {
 
                 //copiar os dados do meu banco de dados para o objeto de retorno do login
                 user.setNome(u.getNome());
+                user.setIdade(u.getIdade());
 
                 break;
             }
