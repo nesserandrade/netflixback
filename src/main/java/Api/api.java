@@ -87,8 +87,6 @@ public class api extends HttpServlet {
 
                 String apiResponse = responseAPI.toString();
 
-                String originalResponse = String.valueOf(apiResponse);
-
                 int idade = Integer.valueOf(requisicaoSessao.getIdade());
                 System.out.println(idade);
                 if(idade < 18) {
@@ -113,14 +111,24 @@ public class api extends HttpServlet {
                     response.getWriter().println(filteredJson);
 
                 }
-                else {
-                    if (originalResponse != null && !originalResponse.isEmpty()) {
-                        // Enviar o JSON para o front-end ou fazer qualquer outra operação necessária
-                        System.out.println(originalResponse);
-                    } else {
-                        System.out.println("O mapa original está vazio. Verifique os dados de entrada.");
-                    }
-                    response.getWriter().println(originalResponse);
+                else if (idade >= 18) {
+                    Type type = new TypeToken<Map<String, Object>>(){}.getType();
+                    Map<String, Object> jsonMap = gson.fromJson(apiResponse, type);
+
+                    List<Map<String, Object>> results = (List<Map<String, Object>>) jsonMap.get("results");
+
+                    List<FiltroIdade> filtros = results.stream()
+                            .map(result -> gson.fromJson(gson.toJson(result), FiltroIdade.class))
+                            .collect(Collectors.toList());
+
+                    List<FiltroIdade> filteredShows = filtros.stream()
+                            .collect(Collectors.toList());
+
+                    jsonMap.put("results", filteredShows);
+
+                    String Json = gson.toJson(jsonMap);
+
+                    response.getWriter().println(Json);
                 }
 
             } else {
