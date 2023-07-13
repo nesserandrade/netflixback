@@ -7,7 +7,10 @@
     <list default="true" id="34b16e76-9441-4cac-8501-67ed48afdb16" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Api/api.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Api/api.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/web.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/web.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Api/login.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Api/login.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/UsuarioController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/UsuarioController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/models/APIResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/models/FilteredResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/models/FiltroIdade.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/models/Movie.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -17,6 +20,7 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
+        <option value="Interface" />
         <option value="Class" />
       </list>
     </option>

@@ -10,7 +10,6 @@ import com.google.gson.Gson;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -25,9 +24,8 @@ import javax.servlet.http.HttpSession;
 
 import com.google.gson.reflect.TypeToken;
 import models.Erro;
-import models.FiltroIdade;
+import models.Movie;
 import models.RequisicaoAPI;
-import models.Usuario;
 
 /**
  *
@@ -96,11 +94,11 @@ public class api extends HttpServlet {
 
                     List<Map<String, Object>> results = (List<Map<String, Object>>) jsonMap.get("results");
 
-                    List<FiltroIdade> filtros = results.stream()
-                            .map(result -> gson.fromJson(gson.toJson(result), FiltroIdade.class))
+                    List<Movie> filtros = results.stream()
+                            .map(result -> gson.fromJson(gson.toJson(result), Movie.class))
                             .collect(Collectors.toList());
 
-                    List<FiltroIdade> filteredShows = filtros.stream()
+                    List<Movie> filteredShows = filtros.stream()
                             .filter(filtro -> !Boolean.valueOf(filtro.getAdult()))
                             .collect(Collectors.toList());
 
@@ -117,11 +115,11 @@ public class api extends HttpServlet {
 
                     List<Map<String, Object>> results = (List<Map<String, Object>>) jsonMap.get("results");
 
-                    List<FiltroIdade> filtros = results.stream()
-                            .map(result -> gson.fromJson(gson.toJson(result), FiltroIdade.class))
+                    List<Movie> filtros = results.stream()
+                            .map(result -> gson.fromJson(gson.toJson(result), Movie.class))
                             .collect(Collectors.toList());
 
-                    List<FiltroIdade> filteredShows = filtros.stream()
+                    List<Movie> filteredShows = filtros.stream()
                             .collect(Collectors.toList());
 
                     jsonMap.put("results", filteredShows);

@@ -2,9 +2,9 @@ package models;
 
 import java.util.List;
 
-public class APIResponse {
+public class FilteredResponse {
     private int page;
-    private List<FiltroIdade> results;
+    private List<Movie> results;
     private int total_pages;
     private int total_results;
 
@@ -16,11 +16,11 @@ public class APIResponse {
         this.page = page;
     }
 
-    public List<FiltroIdade> getResults() {
+    public List<Movie> getResults() {
         return results;
     }
 
-    public void setResults(List<FiltroIdade> results) {
+    public void setResults(List<Movie> results) {
         this.results = results;
     }
 

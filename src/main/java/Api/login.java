@@ -2,8 +2,10 @@ package Api;
 
 import com.google.gson.Gson;
 import controllers.UsuarioController;
+import interfaces.ModelFactory;
 import models.Erro;
 import models.Usuario;
+import models.UsuarioFactory;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -27,9 +29,12 @@ public class login extends HttpServlet {
 
         //COnverte uma string em um objeto no formato indicado
         Gson gson = new Gson();
+
+        UsuarioFactory usuarioFactory = new UsuarioFactory();
         Usuario user = gson.fromJson(request.getReader(), Usuario.class);
 
-        UsuarioController ucontrol = new UsuarioController();
+
+        UsuarioController ucontrol = new UsuarioController(usuarioFactory);
 
         if (ucontrol.login(user)) {
             //sinalizo que funcionou
